@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% block title %}{% endblock %}
+{% block content %}
+<div class="container" id="container" style=" display:flex;
+                flex-direction:column;
+                height:auto;
+                width:100%;
+                color: white;
+                justify-content: center;
+              align-items: center;">
+   
+        <form method="POST" id="myForm">
+            {{ form2.hidden_tag() }}
+            
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <center><label style="font-size: 50px; margin-top: 100px;">Translate Language</label></center>
+                        
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="source_language">Source Language:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="source_language" name="source_language" value="{{ form2.source_language.data }}" class="form-control"  style="width: 300px;">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="text">Enter Text:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <!-- <textarea type="text" id="text" name="text" value="{{ form2.text.data }}" class="form-control" > -->
+                        <textarea id="text" name="text" class="form-control">{{ form2.text.data }}</textarea>
+                        <!-- {{ form2.text }} -->
+                    </div>
+                </div>
+                <br>
+                <!-- <div class="row">
+                    <div class="col-md-6">
+                        <label for="destination_language">Destination Language:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="destination_language" name="destination_language" value="{{ form2.destination_language.data }}" class="form-control" style="width: 300px;">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="converted_text">Translated Text:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <textarea id="converted_text" name="converted_text" class="form-control"></textarea>  
+                    </div>
+                </div>
+                <br> -->
+                <div class="row" id="dest">
+                    <div class="col-md-12">
+                        <center> <button type="button" class="btn btn-primary" id="generateBtn">Add Destination Language</button></center>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <center> <button type="button" class="btn btn-primary" id="generateBtn1">Translate</button></center>
+                    </div>
+                </div>
+                
+            </form>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#generateBtn1').click(function() {
+        // Collecting data from dynamically added destination language fields
+        var destinationLanguages = $(".destination_language").map(function() {
+            return $(this).val();
+        }).get();
+
+        // Iterate over each destination language and make separate AJAX requests
+        destinationLanguages.forEach(function(destinationLanguage, index) {
+            var formData = {
+                source_language: $('#source_language').val(),
+                text: $('#text').val(),
+                destination_language: destinationLanguage
+            };
+
+            // Send AJAX request to the server for translation
+            $.ajax({
+                type: 'POST',
+                url: '/translate',
+                data: formData,
+                success: function(response) {
+                    // Update the corresponding dynamically added textarea with translated text
+                    $(".converted_text").eq(index).val(response.data);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+
+
+    // Click event handler for dynamically adding destination language fields
+    $("#generateBtn").on("click", function(event) {
+        event.preventDefault();
+        var inputField1 = '<div class="col-md-6"><label for="destination_language">Destination Language:</label></div>';
+        inputField1 += '<div class="col-md-6"><input type="text" class="form-control destination_language" style="width: 300px;"></div>';
+        $("#dest").append(inputField1);
+        var inputField2 = '<div class="col-md-6"><label for="converted_text">Translated Text:</label></div>';
+        inputField2 += '<div class="col-md-6"><textarea class="form-control converted_text"></textarea></div>';
+        $("#dest").append(inputField2);
+    });
+     function scrollToBottom() {
+        $('html, body').animate({
+            scrollTop: $('#container').offset().top + $('#container').outerHeight(true)
+        }, 500);
+    }
+    
+    });
+</script>
+{% endblock %}

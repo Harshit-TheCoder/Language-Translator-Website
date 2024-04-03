@@ -1,0 +1,82 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% extends 'base.html' %}
+
+{% block title %}CodeCrypter{% endblock %}
+
+
+{% block content %}
+<div class="container" style=" display:flex;
+                flex-direction:column;
+                height:100vh;
+                width:100%;
+                color: white;
+                justify-content: center;
+              align-items: center;">
+<div>
+    <center><h1>Register</h1></center>
+    <form method="POST" id="myForm">
+        {{ form1.hidden_tag() }}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="email">Email:</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="email" name="email" value="{{ form1.email.data }}" class="form-control" style="width: 300px;">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="username">Username:</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="username" name="username" value="{{ form1.username.data }}" class="form-control" style="width: 300px;">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="password">Password:</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="password" name="password" value="{{ form1.password.data }}" class="form-control" style="width: 300px;">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="confirm_password">Confirm Password:</label>
+                </div>
+                <div class="col-md-6">
+                    <input type="text" id="confirm_password" name="confirm_password" value="{{ form1.confirm_password.data }}" class="form-control" style="width: 300px;">
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-md-12">
+                    <center> <button type="button" class="btn btn-primary" id="generateBtn">Register</button></center>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#generateBtn').click(function() {
+            $.ajax({
+                type: 'POST',
+                url: '/signup',
+                data: $('#myForm').serialize(),
+                success: function(response) {
+                    window.location.href = "/login";
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

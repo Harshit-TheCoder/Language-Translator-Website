@@ -1,0 +1,78 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary" style="position:fixed;top:0;left:0;z-index:999;width:100%">
+    <div class="container-fluid">
+     
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" id="translateLink" aria-current="page" href="{{ url_for('translate') }}">Translate</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('signup') }}">Signup</a>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-primary" id="generateBtn2">Logout</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Function to hide the Translate link
+        function hideTranslateLink() {
+            document.getElementById('translateLink').style.display = 'none';
+        }
+
+        // Function to show the Translate link
+        function showTranslateLink() {
+            document.getElementById('translateLink').style.display = 'block';
+        }
+
+        // Check login status via AJAX request
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/login_status', true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                var isLoggedIn = JSON.parse(xhr.responseText).logged_in;
+                if (isLoggedIn) {
+                    showTranslateLink();
+                } else {
+                    hideTranslateLink();
+                }
+            } else {
+                console.log('Error in fetching login status');
+            }
+        };
+        xhr.send();
+
+        // Logout button click event
+        document.getElementById('generateBtn2').addEventListener("click", function() {
+            // Send AJAX request to logout route
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/logout', true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Hide the Translate link upon successful logout
+                    hideTranslateLink();
+                    // Redirect to the home page
+                    window.location.href = "/";
+                } else {
+                    console.log('Error in logging out');
+                }
+            };
+            xhr.send();
+        });
+    });
+</script>
+
+
+

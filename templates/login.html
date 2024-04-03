@@ -1,0 +1,75 @@
+{% from 'bootstrap5/form.html' import render_form %}
+{% extends 'base.html' %}
+
+{% block title %}CodeCrypter{% endblock %}
+
+{% block content %}
+<div class="container" style=" display:flex;
+                flex-direction:column;
+                height:100vh;
+                width:100%;
+                color: #FFFFFF;
+                justify-content: center;
+                align-items: center;">
+    
+    <div style="color:white">
+        <center><h1>Login</h1></center>
+        <form method="POST" id="myForm">
+            {{ form.hidden_tag() }}
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="email">Email:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="email" name="email" value="{{ form.email.data }}" class="form-control"  style="width: 300px;">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="username">Username:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="username" name="username" value="{{ form.username.data }}" class="form-control" style="width: 300px;">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="password">Password:</label>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="password" name="password" value="{{ form.password.data }}" class="form-control" style="width: 300px;">
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <center> <button type="button" class="btn btn-primary" id="generateBtn">Login</button></center>
+                    </div>
+                </div>
+            </form>
+    </div>
+        
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        $('#generateBtn').click(function() {
+            $.ajax({
+                type: 'POST',
+                url: '/login',
+                data: $('#myForm').serialize(),
+                success: function(response) {
+                    window.location.href = "/translate";
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
